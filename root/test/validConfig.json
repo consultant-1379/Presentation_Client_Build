@@ -1,0 +1,35 @@
+{
+    "properties":{
+        "info":"Running build in target"
+    },
+    "defaultPhase":"compile",
+    "phases":{
+        "clean":{
+            "delete": {
+                "target": "./target"
+            }
+        },
+        "compile":{
+            "depends":["clean"],
+            "concat":{
+                "target":"some.js",
+                "files":[
+                    "first.js",
+                    "second.js"
+                ]
+            }
+        },
+        "test":{
+            "depends":["compile"],
+            "execute": {
+                "target": ""
+            }
+        },
+        "create-package":{
+            "depends":["clean", "test"],
+            "copy": {
+
+            }
+        }
+    }
+}

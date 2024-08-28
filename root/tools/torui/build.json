@@ -1,0 +1,106 @@
+{
+    "properties":{
+        "buildDir":"target",
+        "sdkTools":"$(pathToSdk)/tools",
+        "jasmineRunner":"$(sdkTools)/jasmine/test-runner.js",
+        "jscoverage":{
+            "?os.platform=windows":"$(sdkTools)/jscoverage/jscoverage.exe",
+            "?os.platform=unix":"$(sdkTools)/jscoverage/jscoverage"
+        },
+        "phantomjs":{
+            "?os.platform=windows":"$(sdkTools)/phantomjs/bin/phantomjs.exe",
+            "?os.platform=unix":"$(sdkTools)/phantomjs/bin/phantomjs"
+        },
+        "rjs":"$(node) $(pathToSdk)/node_modules/requirejs/bin/r.js"
+    },
+    "defaultPhase":"package",
+    "phases":{
+        "clean":{
+            "delete":{
+                "target":"$(buildDir)"
+            }
+        },
+        "copy-test-dependencies":{
+            "depends":["clean"],
+            "copy":{
+                "from":"node_modules/titan/*",
+                "to":"$(buildDir)/node_modules/titan/"
+            }
+        },
+        "instrument-code":{
+            "depends":["clean"],
+            "execute":{
+                "command":"$(jscoverage)",
+                "attributes":[
+                    "src",
+                    "$(buildDir)/src"
+                ]
+            }
+        },
+        "copy-test-files":{
+            "depends":["copy-test-dependencies", "instrument-code"],
+            "copy":{
+                "from":["test"],
+                "to":"$(buildDir)/"
+            }
+        },
+        "test":{
+            "depends":["copy-test-files"],
+            "copy": {
+                "from": "node_modules/uisdk-build/tools/*",
+                "to": "$(buildDir)/test/unit/_tools/"
+            },
+            "execute":{
+                "command":"$(phantomjs)",
+                "attributes":[
+                    "$(jasmineRunner)",
+                    "--root $(buildDir)",
+                    "--reports $(buildDir)/reports",
+                    "--type unit"
+                ]
+            }
+        },
+        "optimize": {
+            "rjs":{
+                "config":{
+                    "baseUrl":"src",
+                    "dir":"target/package",
+                    "optimize":"none",
+                    "resources":".",
+                    "paths":{
+                        "Titan":"empty:",
+                        "template":"../node_modules/titan/lib/requirejs/template",
+                        "styles":"../node_modules/titan/lib/requirejs/styles"
+                    },
+                    "stubModules":["template", "styles"],
+                    "modules":[
+                        {
+                            "name":"$(namespace)/Application"
+                        }
+                    ]
+                }
+            }
+        },
+        "cleanup-after-optimize": {
+            "delete":{
+                "target":[
+                    "$(buildDir)/package/build.txt",
+                    "$(buildDir)/package/styles.js",
+                    "$(buildDir)/package/template.js",
+                    "$(buildDir)/package/index.html"
+                ]
+            }
+        },
+        "package":{
+            "depends": ["test", "optimize", "cleanup-after-optimize"],
+            "copy":{
+                "from":[
+                    "config/app.json",
+                    "resources/*",
+                    "package.json"
+                ],
+                "to":"$(buildDir)/package/"
+            }
+        }
+    }
+}

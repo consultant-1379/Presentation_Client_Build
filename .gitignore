@@ -1,0 +1,20 @@
+# Glogal .gitingore specifically for Presentation Build project #
+
+# Eclipse related files
+.settings
+.classpath
+.project
+
+# InteliJ files #
+worskpace.xml
+.idea/
+*.iml
+
+# We ignore log files as well
+*.log
+
+# Build related folders
+/target
+
+# We should not commit node_modules for applications
+# Since we bundle node modules for now, it is commented out /root/node_modules/

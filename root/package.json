@@ -1,0 +1,50 @@
+{
+    "name": "uisdk-build",
+    "description": "Build system for Tor UI ",
+    "version": "0.0.12",
+    "bundleDependencies": [
+        "commander",
+        "lodash",
+        "glob",
+        "minimatch",
+        "shelljs",
+        "handlebars",
+        "less",
+        "requirejs",
+        "express",
+        "mocha",
+        "rewire",
+        "chai",
+        "istanbul",
+        "mocha-istanbul"
+    ],
+    "dependencies": {
+        "commander": "1.1.1",
+        "lodash": "0.9.1",
+        "glob": "3.1.14",
+        "minimatch": "0.2",
+        "shelljs": "0.0.8",
+        "handlebars": "1.0.5beta",
+        "less": "1.3.0",
+        "requirejs": "2.0.4",
+        "express": "3.0.6"
+    },
+    "devDependencies": {
+        "mocha": "1.7.3",
+        "rewire": "1.0.3",
+        "chai": "1.4.0",
+        "istanbul": "0.1.25",
+        "mocha-istanbul": "*"
+    },
+    "main": "./src/build.js",
+    "bin": {
+        "uisdk": "./src/uisdk.js"
+    },
+    "engines": {
+        "node": ">=0.8"
+    },
+    "scripts": {
+        "test": "node node_modules/mocha/bin/mocha --ui bdd --reporter spec --globals child_process --recursive test/",
+        "install": "node tools/postinstall.js"
+    }
+}

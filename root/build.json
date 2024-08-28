@@ -1,0 +1,47 @@
+{
+    "properties": {
+        "buildDir": "target",
+        "kautkas": "Reku mes laizam ieksh $(buildDir)",
+        "node": {
+            "?os.platform=windows": "node.exe",
+            "?os.platform=unix": "node"
+        },
+        "jscoverage": {
+            "?os.platform=windows": "jscoverage.exe",
+            "?os.platform=unix": "jscoverage"
+        },
+        "phantomjs": {
+            "?os.platform=windows": "phantom.exe",
+            "?os.platform=unix": "phantom"
+        },
+        "npm": {
+            "?os.platform=windows": "npm.exe",
+            "?os.platform=unix": "npm"
+        }
+    },
+    "defaultPhase": "clean",
+    "phases": {
+        "clean": {
+            "delete": {
+                "target": "$(buildDir)"
+            },
+            "concat": {
+                "target": "$(buildDir)/test.js",
+                "files": ["package.json", "build.json"]
+            },
+            "copy": {
+                "from": "$(buildDir)/*.js",
+                "to": "$(buildDir)/magician/"
+            },
+            "execute": {
+                "command": "lsa"
+            }
+        },
+        "wee": {
+            "depends": ["clean"],
+            "delete": {
+                "target": "$(buildDir)"
+            }
+        }
+    }
+}
